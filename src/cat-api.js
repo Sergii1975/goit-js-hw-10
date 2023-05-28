@@ -21,11 +21,8 @@ export function fetchBreeds() {
 };
 
 export function fetchCatByBreed(breedId) {
-  const breed_ids = new URLSearchParams({
-    // apikey: API,
-    
-     });
-  return fetch(`${CAT_URL}?breed_ids=abys&api_key=${API}`)
+  
+  return fetch(`${CAT_URL}?breed_ids=${breedId}&api_key=${API}`)
     .then((response) => {
       console.log(response);
       if (!response.ok) {
