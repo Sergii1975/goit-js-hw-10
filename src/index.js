@@ -1,25 +1,13 @@
 import { fetchBreeds } from './cat-api.js';
-import {fetchCatByBreed} from './cat-api.js';
+import { fetchCatByBreed } from './cat-api.js';
 
 const selectEl = document.querySelector("select.breed-select");
 const loaderEl = document.querySelector(".loader");
 const errorEl = document.querySelector(".error");
 const infoEl = document.querySelector(".cat-info");
 
-
-
-function getBreeds(data) {
-  fetchBreeds(data).then((data) => {
-    console.log(data)
-
-  });
-}
-getBreeds('objectsPromice')
-
-
 function updateSelect(data) {
   fetchBreeds(data).then(data => {
-    // console.log(data);
     const markupBreeds = data
       .map(({ id, name }) => {
         return `<li><option value ='${id}'>${name}</option></li>`;
@@ -28,42 +16,33 @@ function updateSelect(data) {
     selectEl.insertAdjacentHTML('beforeend', markupBreeds);
   });
 }
+  
 updateSelect();
 
 selectEl.addEventListener("change", onChange);
-
+loaderEl.style.display = 'none'
+errorEl.style.display = 'none'
 function onChange(e) {
- 
+ loaderEl.style.display = 'block'
 let breedId = e.target.value
-   fetchCatByBreed(breedId).then((data) => {
+  fetchCatByBreed(breedId).then((data) => {
     console.log(data)
      
-    const markupCats = data
-      .map(({ name, description, reference_image_id, temperament}) => {
-        return `<li><h1>${name}</h1><img src=${reference_image_id} alt='${name}' width='200'><p>${temperament}</p><p>${description}</p></li>`;
-        
+    const markupCats = data[0].breeds
+      .map(({ name, description, temperament }) => {
+        return `<h1>${name}</h1><p>${description}</p><p>Temperament: ${temperament}</p>`;
       })
       .join('');
-    infoEl.insertAdjacentHTML('beforeend', markupCats);
-
+    const markupPicture = data
+      .map(({ url }) => {
+        return `<img src='${url}' width='600'>`
+      })
+      .join('');
+    infoEl.insertAdjacentHTML('afterbegin', markupCats);
+    infoEl.insertAdjacentHTML('beforeend', markupPicture);
+    
+  }).finally(() => {
+    loaderEl.style.display = 'none'
   });
+  infoEl.innerHTML = '';
 }
-
-// function getCatByBreed(data) {
- 
-//   fetchCatByBreed(data).then((data) => {
-//     console.log(data)
-     
-//     const markupCats = data
-//       .map(({ name, description, reference_image_id, temperament}) => {
-//         return `<li><h1>${name}</h1><img src=${reference_image_id} alt='${name}' width='200'><p>${temperament}</p><p>${description}</p></li>`;
-//         // return `<li><option value =${reference_image_id}></li>`;
-//       })
-//       .join('');
-//     infoEl.insertAdjacentHTML('beforeend', markupCats);
-
-//   });
-  
-//   }
-// getCatByBreed()
-
