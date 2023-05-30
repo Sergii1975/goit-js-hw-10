@@ -1,6 +1,8 @@
 import { fetchBreeds } from './cat-api.js';
 import { fetchCatByBreed } from './cat-api.js';
 
+import Notiflix from 'notiflix';
+
 const selectEl = document.querySelector("select.breed-select");
 const loaderEl = document.querySelector(".loader");
 const errorEl = document.querySelector(".error");
@@ -14,8 +16,8 @@ function updateSelect(data) {
       })
       .join('');
     selectEl.insertAdjacentHTML('beforeend', markupBreeds);
-  });
-}
+  }).catch((error )=> Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!'));
+};
   
 updateSelect();
 
@@ -26,8 +28,7 @@ function onChange(e) {
  loaderEl.style.display = 'block'
 let breedId = e.target.value
   fetchCatByBreed(breedId).then((data) => {
-    console.log(data)
-     
+    
     const markupCats = data[0].breeds
       .map(({ name, description, temperament }) => {
         return `<h1>${name}</h1><p>${description}</p><p>Temperament: ${temperament}</p>`;
@@ -41,8 +42,9 @@ let breedId = e.target.value
     infoEl.insertAdjacentHTML('afterbegin', markupCats);
     infoEl.insertAdjacentHTML('beforeend', markupPicture);
     
-  }).finally(() => {
+  }).catch((error )=> Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!'))
+    .finally(() => {
     loaderEl.style.display = 'none'
   });
   infoEl.innerHTML = '';
-}
+};

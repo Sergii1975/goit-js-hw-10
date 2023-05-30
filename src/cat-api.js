@@ -9,7 +9,6 @@ export function fetchBreeds() {
     
     return fetch(`${BASE_URL}?api_key=${API}`)
     .then((response) => {
-      
       console.log(response);
       if (!response.ok) {
         throw new Error(response.status);
@@ -30,6 +29,5 @@ export function fetchCatByBreed(breedId) {
       return response.json();
     })
     .catch((error) => Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!'));
-   
 };
 
